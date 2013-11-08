@@ -5,6 +5,7 @@ Java IntelHex Parser Library
 * Licensed under Simplified BSD license
 * Including demo code: intelhex to binary converter
 
+~~~~~
 	// create input stream of some IntelHex data
 	InputStream is = new FileInputStream("Application.hex");
 	
@@ -24,3 +25,4 @@ Java IntelHex Parser Library
 		}
 	});
 	ihp.parse();
+~~~~~
