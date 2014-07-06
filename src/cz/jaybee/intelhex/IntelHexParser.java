@@ -42,6 +42,7 @@ public class IntelHexParser {
     private boolean eof = false;
     private int recordIdx = 0;
     private long upperAddress = 0;
+    private long startAddress = 0;
 
     private class Record {
 
@@ -49,6 +50,23 @@ public class IntelHexParser {
         int address;
         IntelHexRecordType type;
         byte[] data;
+        
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            
+            sb.append(type);
+            sb.append(" @");
+            sb.append(String.format("0x%04X", address));
+            sb.append(" [");
+            for(byte c: data) {
+                sb.append(String.format("0x%02X", c));
+                sb.append(" ");
+            }
+            sb.setLength(sb.length() - 1);            
+            sb.append("]");
+            return sb.toString();
+        }
     }
 
     public IntelHexParser(Reader reader) {
@@ -148,15 +166,29 @@ public class IntelHexParser {
                     throw new Exception("Invalid EXT_SEG record (" + recordIdx + ")");
                 }
                 break;
-            case START_SEG:
             case START_LIN:
-                throw new Exception(record.type + " record not implemented (" + recordIdx + ")");
+                if (record.length == 4) {
+                    startAddress = 0;
+                    for (byte c: record.data) {
+                        startAddress = startAddress << 8;
+                        startAddress |= (c & 0xFF);
+                    }
+                } else {
+                    throw new Exception("Invalid START_LIN record at line #" + recordIdx + " " + record);
+                }
+                break;
+            case START_SEG:
+                throw new Exception("Record at line #" + recordIdx + " not implemented " + record);
             case UNKNOWN:
                 break;
         }
 
     }
 
+    public long getStartAddress() {
+        return startAddress;
+    }
+    
     public void parse() throws IOException, Exception {
         recordIdx = 1;
         upperAddress = 0;

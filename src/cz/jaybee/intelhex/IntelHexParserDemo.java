@@ -43,19 +43,45 @@ public class IntelHexParserDemo implements IntelHexDataListener {
     private long addressStop;
     private byte[] buffer;
     private OutputStream destination;
+    private MemoryRegions regions;
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws FileNotFoundException, IOException, Exception {
-        InputStream is = new FileInputStream("Application.hex");
-        OutputStream os = new FileOutputStream("Application.bin");
+        String fileIn = "Application.hex";
+        String fileOut = "Application.bin";
+        String dataFrom = "0x1D000000";
+        String dataTo = "0x1D07FFEF";
+        if (args.length >= 1) {
+            fileIn = args[0];
+        } 
+        
+        if (args.length >= 2) {
+            fileOut = args[1];
+        }
+        
+        if (args.length >= 3) {
+            dataFrom = args[2];
+        }
+        
+        if (args.length >= 4) {
+            dataTo = args[3];
+        }
+        
+        InputStream is = new FileInputStream(fileIn);
+        OutputStream os = new FileOutputStream(fileOut);
         IntelHexParser ihp = new IntelHexParser(is);
         IntelHexParserDemo ihpd = new IntelHexParserDemo(0x1D000000, 0x1D07FFEF, os);
         ihp.setDataListener(ihpd);
         ihp.parse();
         
         is.close();
+        
+        System.out.printf("Program start address 0x%08X\r\n", ihp.getStartAddress());
+        
+        System.out.println("Memory regions: ");
+        System.out.println(ihpd.regions);
     }
 
     private IntelHexParserDemo(long addressStart, long addressStop, OutputStream destination) {
@@ -64,10 +90,13 @@ public class IntelHexParserDemo implements IntelHexDataListener {
         this.destination = destination;
         this.buffer = new byte[(int) (addressStop - addressStart + 1)];
         Arrays.fill(buffer, (byte) 0xFF);
+        regions = new MemoryRegions();
     }
 
     @Override
     public void data(long address, byte[] data) {
+        regions.add(address, data.length);
+        
         if ((address >= addressStart) && (address <= addressStop)) {
             int length = data.length;
             if ((address + length) > addressStop) {
