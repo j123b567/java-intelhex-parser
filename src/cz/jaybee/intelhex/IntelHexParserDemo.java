@@ -53,6 +53,7 @@ public class IntelHexParserDemo implements IntelHexDataListener {
         String fileOut = "Application.bin";
         String dataFrom = "0x1D000000";
         String dataTo = "0x1D07FFEF";
+                
         if (args.length >= 1) {
             fileIn = args[0];
         } 
@@ -69,10 +70,13 @@ public class IntelHexParserDemo implements IntelHexDataListener {
             dataTo = args[3];
         }
         
+        Long dataFromInt = Long.parseLong(dataFrom.substring(2), 16);
+        Long dataToInt = Long.parseLong(dataTo.substring(2), 16);
+        
         InputStream is = new FileInputStream(fileIn);
         OutputStream os = new FileOutputStream(fileOut);
         IntelHexParser ihp = new IntelHexParser(is);
-        IntelHexParserDemo ihpd = new IntelHexParserDemo(0x1D000000, 0x1D07FFEF, os);
+        IntelHexParserDemo ihpd = new IntelHexParserDemo(dataFromInt, dataToInt, os);
         ihp.setDataListener(ihpd);
         ihp.parse();
         

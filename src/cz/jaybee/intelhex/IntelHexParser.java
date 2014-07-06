@@ -178,7 +178,15 @@ public class IntelHexParser {
                 }
                 break;
             case START_SEG:
-                throw new Exception("Record at line #" + recordIdx + " not implemented " + record);
+                if (record.length == 4) {
+                    startAddress = 0;
+                    for (byte c: record.data) {
+                        startAddress = startAddress << 8;
+                        startAddress |= (c & 0xFF);
+                    }                    
+                } else {
+                    throw new Exception("Invalid START_SEG record at line #" + recordIdx + " " + record);
+                }
             case UNKNOWN:
                 break;
         }
