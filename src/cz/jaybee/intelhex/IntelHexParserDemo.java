@@ -88,7 +88,7 @@ public class IntelHexParserDemo implements IntelHexDataListener {
         System.out.println(ihpd.regions);
     }
 
-    private IntelHexParserDemo(long addressStart, long addressStop, OutputStream destination) {
+    public IntelHexParserDemo(long addressStart, long addressStop, OutputStream destination) {
         this.addressStart = addressStart;
         this.addressStop = addressStop;
         this.destination = destination;

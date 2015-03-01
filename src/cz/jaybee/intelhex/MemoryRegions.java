@@ -37,13 +37,9 @@ import java.util.List;
  */
 public class MemoryRegions {
 
-    List<Region> regions;
+    public final List<Region> regions = new ArrayList<>();
 
-    public MemoryRegions() {
-        regions = new ArrayList<Region>();
-    }
-
-    private class Region implements Comparable<Region>{
+    public static class Region implements Comparable<Region>{
 
         private long start;
         private long length;
@@ -60,6 +56,10 @@ public class MemoryRegions {
         public long getLength() {
             return length;
         }
+
+		void incLength(long value) {
+			length += value;
+		}
 
         @Override
         public String toString() {
@@ -82,7 +82,7 @@ public class MemoryRegions {
             prevRegion = regions.get(regions.size() - 1);
             long nextAddress = prevRegion.start + prevRegion.length;
             if (nextAddress == start) {
-                prevRegion.length += length;
+				prevRegion.incLength(length);
                 return;
             }
         }        
@@ -93,9 +93,18 @@ public class MemoryRegions {
         Collections.sort(regions);
         
         Iterator<Region> iter = regions.iterator();
+		Region prev = null;
         while(iter.hasNext()) {
-            Region r = iter.next();
-            
+            Region curr = iter.next();
+			if (prev == null) prev = curr;
+			else {
+				// check for chaining
+				if (curr.getStart() == (prev.getStart() + prev.getLength())) {
+					prev.incLength(curr.getLength());
+					iter.remove();
+				}
+				else prev = curr;
+			}
         }
     }
 

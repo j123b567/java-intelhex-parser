@@ -36,7 +36,7 @@ import java.io.*;
  */
 public class IntelHexParser {
 
-    private BufferedReader reader = null;
+    private final BufferedReader reader;
     private IntelHexDataListener dataListener = null;
     private static final int HEX = 16;
     private boolean eof = false;
@@ -70,11 +70,7 @@ public class IntelHexParser {
     }
 
     public IntelHexParser(Reader reader) {
-        if (reader instanceof BufferedReader) {
-            this.reader = (BufferedReader) reader;
-        } else {
-            this.reader = new BufferedReader(reader);
-        }
+		this.reader = (reader instanceof BufferedReader) ? (BufferedReader) reader : new BufferedReader(reader);
     }
 
     public IntelHexParser(InputStream stream) {
@@ -197,9 +193,11 @@ public class IntelHexParser {
         return startAddress;
     }
     
-    public void parse() throws IOException, Exception {
+    public void parse() throws Exception {
+		eof = false;
         recordIdx = 1;
         upperAddress = 0;
+		startAddress = 0;
         String recordStr;
 
         while ((recordStr = reader.readLine()) != null) {
