@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2014, Jan Breuer All rights reserved.
+ * @license Copyright (c) 2015, Jan Breuer All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,83 +31,74 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- *
+ * Class to hold all memory address regions
+ * 
  * @author Jan Breuer
+ * @author riilabs
  * @license BSD 2-Clause
  */
 public class MemoryRegions {
 
-    public final List<Region> regions = new ArrayList<>();
-
-    public static class Region implements Comparable<Region>{
-
-        private long start;
-        private long length;
-
-        public Region(long start, long length) {
-            this.start = start;
-            this.length = length;
-        }
-
-        public long getStart() {
-            return start;
-        }
-
-        public long getLength() {
-            return length;
-        }
-
-		void incLength(long value) {
-			length += value;
-		}
-
-        @Override
-        public String toString() {
-            return String.format("0x%08x:0x%08x (%dB 0x%08X)", start, start + length - 1, length, length);
-        }
-
-        @Override
-        public int compareTo(Region o) {
-            if(this.start == o.start) {
-                return Long.compare(this.length, o.length);
-            } else {
-                return Long.compare(this.start, o.start);
-            }
-        }
-    }
+    private final List<Region> regions = new ArrayList<>();
 
     public void add(long start, long length) {
         Region prevRegion;
         if (regions.size() > 0) {
             prevRegion = regions.get(regions.size() - 1);
-            long nextAddress = prevRegion.start + prevRegion.length;
+            long nextAddress = prevRegion.getAddressStart() + prevRegion.getLength();
             if (nextAddress == start) {
-				prevRegion.incLength(length);
+                prevRegion.incLength(length);
                 return;
             }
-        }        
+        }
         regions.add(new Region(start, length));
     }
 
     public void compact() {
         Collections.sort(regions);
-        
+
         Iterator<Region> iter = regions.iterator();
-		Region prev = null;
-        while(iter.hasNext()) {
+        Region prev = null;
+        while (iter.hasNext()) {
             Region curr = iter.next();
-			if (prev == null) prev = curr;
-			else {
-				// check for chaining
-				if (curr.getStart() == (prev.getStart() + prev.getLength())) {
-					prev.incLength(curr.getLength());
-					iter.remove();
-				}
-				else prev = curr;
-			}
+            if (prev == null) {
+                prev = curr;
+            } else {
+                // check for chaining
+                if (curr.getAddressStart() == (prev.getAddressStart() + prev.getLength())) {
+                    prev.incLength(curr.getLength());
+                    iter.remove();
+                } else {
+                    prev = curr;
+                }
+            }
         }
     }
+    
+    public void clear() {
+        regions.clear();
+    }
 
+    public int size() {
+        return regions.size();
+    }
+    
+    public Region get(int index) {
+        return regions.get(index);
+    }
+    
+    public Region getFullRangeRegion() {
+        long start = 0;
+        long length = 0;
+        if (!regions.isEmpty()) {
+            start = regions.get(0).getAddressStart();
+            Region last = regions.get(regions.size() - 1);
+            length = last.getAddressStart() + last.getLength() - start;
+        }
+
+        return new Region(start, length);
+    }
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
