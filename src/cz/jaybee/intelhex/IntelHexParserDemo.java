@@ -66,7 +66,24 @@ public class IntelHexParserDemo {
         String fileOut = "Application.bin";
         String dataFrom = "min";
         String dataTo = "max";
+        boolean minimize = false;
 
+        if (args.length == 0) {
+            System.out.println("usage:");
+            System.out.println("    hex2bin <hex> <bin> <start address> <end address> [minimize]");            
+            System.out.println();
+            System.out.println("    full address range of app.hex");
+            System.out.println("        hex2bin app.hex app.bin");
+            System.out.println();
+            System.out.println("    limited exact address range of app.hex, undefined data are 0xff");
+            System.out.println("        hex2bin app.hex app.bin 0x0000 0x1fff");
+            System.out.println();
+            System.out.println("    limited minimal address range of app.hex, start at 0x0000,");
+            System.out.println("    max address is 0x1fff, but can be lower");
+            System.out.println("        hex2bin app.hex app.bin 0x0000 0x1fff minimize");
+            return;
+        }
+        
         if (args.length >= 1) {
             fileIn = args[0];
         }
@@ -81,6 +98,12 @@ public class IntelHexParserDemo {
 
         if (args.length >= 4) {
             dataTo = args[3];
+        }
+        
+        if (args.length >=5 ) {
+            if (args[4].equals("minimize")) {
+                minimize = true;
+            }
         }
 
         try (FileInputStream is = new FileInputStream(fileIn)) {
@@ -104,7 +127,7 @@ public class IntelHexParserDemo {
             }
 
             // 2nd iteration - actual write of the output
-            BinWriter writer = new BinWriter(outputRegion, os);
+            BinWriter writer = new BinWriter(outputRegion, os, minimize);
             parser.setDataListener(writer);
             parser.parse();
 

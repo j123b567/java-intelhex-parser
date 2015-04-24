@@ -43,13 +43,17 @@ public class BinWriter implements IntelHexDataListener {
     private final OutputStream destination;
     private final byte[] buffer;
     private final MemoryRegions regions;
+    private long maxAddress;
+    private final boolean minimize;
 
-    public BinWriter(Region outputRegion, OutputStream destination) {
+    public BinWriter(Region outputRegion, OutputStream destination, boolean minimize) {
         this.outputRegion = outputRegion;
         this.destination = destination;
+        this.minimize = minimize;
         this.buffer = new byte[(int) (outputRegion.getLength())];
         Arrays.fill(buffer, (byte) 0xFF);
         regions = new MemoryRegions();
+        maxAddress = outputRegion.getAddressStart();
     }
 
     @Override
@@ -62,13 +66,20 @@ public class BinWriter implements IntelHexDataListener {
                 length = (int) (outputRegion.getAddressEnd() - address + 1);
             }
             System.arraycopy(data, 0, buffer, (int) (address - outputRegion.getAddressStart()), length);
+            
+            if (maxAddress < (address + data.length -1)) {
+                maxAddress = address + data.length - 1;
+            }
         }
     }
 
     @Override
     public void eof() {       
         try {
-            destination.write(buffer);
+            if (!minimize) {
+                maxAddress = outputRegion.getAddressEnd();
+            }
+            destination.write(buffer, 0, (int)(maxAddress - outputRegion.getAddressStart() + 1));
         } catch (IOException ex) {
             Logger.getLogger(BinWriter.class.getName()).log(Level.SEVERE, null, ex);
         }
