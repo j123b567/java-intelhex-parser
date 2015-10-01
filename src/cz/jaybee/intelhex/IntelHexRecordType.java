@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2015, Jan Breuer All rights reserved.
+ * Copyright (c) 2015, Jan Breuer All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,7 +29,6 @@ package cz.jaybee.intelhex;
  * Type of one record in Intel HEX file (type of line)
  *
  * @author Jan Breuer
- * @license BSD 2-Clause
  */
 public enum IntelHexRecordType {
 
@@ -49,7 +48,7 @@ public enum IntelHexRecordType {
     /**
      * Convert enum value to integer
      *
-     * @return
+     * @return record type integer value
      */
     public int toInt() {
         return id;
@@ -58,8 +57,8 @@ public enum IntelHexRecordType {
     /**
      * Convert integer value to enum value
      *
-     * @param id
-     * @return
+     * @param id record type integer value
+     * @return record type enum value
      */
     public static IntelHexRecordType fromInt(int id) {
         for (IntelHexRecordType d : IntelHexRecordType.values()) {

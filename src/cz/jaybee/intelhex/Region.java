@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2015, Jan Breuer All rights reserved.
+ * Copyright (c) 2015, Jan Breuer All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,7 +29,6 @@ package cz.jaybee.intelhex;
  * One memory region
  * 
  * @author Jan Breuer
- * @license BSD 2-Clause
  */
 public class Region implements Comparable<Region> {
 
@@ -43,7 +42,7 @@ public class Region implements Comparable<Region> {
 
     /**
      * Get length of the region
-     * @return 
+     * @return length of the region
      */
     public long getLength() {
         return addressEnd - addressStart + 1;
@@ -51,7 +50,7 @@ public class Region implements Comparable<Region> {
     
     /**
      * Return last address in memory region
-     * @return 
+     * @return last address in memory region
      */
     public long getAddressEnd() {
         return addressEnd;
@@ -67,7 +66,7 @@ public class Region implements Comparable<Region> {
     
     /**
      * Get start address of the region
-     * @return 
+     * @return start address of memory region
      */    
     public long getAddressStart() {
         return addressStart;
@@ -97,8 +96,9 @@ public class Region implements Comparable<Region> {
     /**
      * Compare, if one region is after another region
      * 
-     * @param o
-     * @return 
+     * @param   o the object to be compared.
+     * @return  a negative integer, zero, or a positive integer as this object
+     *          is less than, equal to, or greater than the specified object.
      */
     @Override
     public int compareTo(Region o) {

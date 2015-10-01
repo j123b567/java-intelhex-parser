@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2015, Jan Breuer All rights reserved.
+ * Copyright (c) 2015, Jan Breuer All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,7 +33,6 @@ import java.io.*;
  * @author Jan Breuer
  * @author Kristian Sloth Lauszus
  * @author riilabs
- * @license BSD 2-Clause
  */
 public class IntelHexParser {
 
@@ -108,8 +107,8 @@ public class IntelHexParser {
     /**
      * Parse one line of Intel HEX file
      *
-     * @param record
-     * @return
+     * @param string record
+     * @return parsed record
      * @throws IntelHexException
      */
     private Record parseRecord(String record) throws IntelHexException {
@@ -230,7 +229,7 @@ public class IntelHexParser {
      * Return program start address/reset address. May not be at the beggining
      * of the data.
      *
-     * @return
+     * @return Start address
      */
     public long getStartAddress() {
         return startAddress;
