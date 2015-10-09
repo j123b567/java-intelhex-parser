@@ -45,39 +45,6 @@ public class Parser {
     private long startAddress = 0;
 
     /**
-     * Class to hold one Intel HEX record - one line in the file
-     */
-    private class Record {
-
-        int length;
-        int address;
-        RecordType type;
-        byte[] data;
-
-        /**
-         * Convert the record to pretty string
-         *
-         * @return
-         */
-        @Override
-        public String toString() {
-            StringBuilder sb = new StringBuilder();
-
-            sb.append(type);
-            sb.append(" @");
-            sb.append(String.format("0x%04X", address));
-            sb.append(" [");
-            for (byte c : data) {
-                sb.append(String.format("0x%02X", c));
-                sb.append(" ");
-            }
-            sb.setLength(sb.length() - 1);
-            sb.append("]");
-            return sb.toString();
-        }
-    }
-
-    /**
      * Constructor of the parser with reader
      *
      * @param reader
