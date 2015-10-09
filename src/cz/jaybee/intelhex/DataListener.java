@@ -26,34 +26,25 @@
 package cz.jaybee.intelhex;
 
 /**
- * First pass listener to calculate data address range for further use
+ * Listener interface to parser events
  *
- * @author riilabs
  * @author Jan Breuer
  */
-public class RangeDetector implements IntelHexDataListener {
+public interface DataListener {
 
-    private final MemoryRegions regions = new MemoryRegions();
+    /**
+     * Every time new data are read from file, this listener method is called
+     * with appropriate values. Multiple calls of this function may be done
+     * inside one memory regions but they will not overlap (if they don't
+     * overlap in original intelhex).
+     *
+     * @param address
+     * @param data
+     */
+    public void data(long address, byte[] data);
 
-    @Override
-    public void data(long address, byte[] data) {
-        regions.add(address, data.length);
-    }
-
-    @Override
-    public void eof() {
-        regions.compact();
-    }
-
-    public void reset() {
-        regions.clear();
-    }
-
-    public Region getFullRangeRegion() {
-        return regions.getFullRangeRegion();
-    }
-    
-    public MemoryRegions getMemoryRegions() {
-        return regions;
-    }
+    /**
+     * After eof is detected in the file, this listener method is called
+     */
+    public void eof();
 }

@@ -23,8 +23,13 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package cz.jaybee.intelhex;
+package cz.jaybee.cli;
 
+import cz.jaybee.intelhex.IntelHexException;
+import cz.jaybee.intelhex.Parser;
+import cz.jaybee.intelhex.Region;
+import cz.jaybee.intelhex.listeners.RangeDetector;
+import cz.jaybee.intelhex.listeners.BinWriter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -37,17 +42,17 @@ import java.util.logging.Logger;
  *
  * @author Jan Breuer
  */
-public class IntelHexParserDemo {
+public class Hex2bin {
 
     /**
      * Convert Intel HEX to bin
      *
      * usage:
      *
-     * IntelHexParserDemo {source} {target}
+     * Hex2bin {source} {target}
      *
-     * IntelHexParserDemo {source} {target} {address_from} {address_to}
-     * 
+     * Hex2bin {source} {target} {address_from} {address_to}
+     *
      * {source} is source Intel HEX file name
      *
      * {target} is target BIN file name
@@ -69,7 +74,7 @@ public class IntelHexParserDemo {
 
         if (args.length == 0) {
             System.out.println("usage:");
-            System.out.println("    hex2bin <hex> <bin> <start address> <end address> [minimize]");            
+            System.out.println("    hex2bin <hex> <bin> <start address> <end address> [minimize]");
             System.out.println();
             System.out.println("    full address range of app.hex");
             System.out.println("        hex2bin app.hex app.bin");
@@ -82,7 +87,7 @@ public class IntelHexParserDemo {
             System.out.println("        hex2bin app.hex app.bin 0x0000 0x1fff minimize");
             return;
         }
-        
+
         if (args.length >= 1) {
             fileIn = args[0];
         }
@@ -98,8 +103,8 @@ public class IntelHexParserDemo {
         if (args.length >= 4) {
             dataTo = args[3];
         }
-        
-        if (args.length >=5 ) {
+
+        if (args.length >= 5) {
             if (args[4].equals("minimize")) {
                 minimize = true;
             }
@@ -108,19 +113,19 @@ public class IntelHexParserDemo {
         try (FileInputStream is = new FileInputStream(fileIn)) {
             OutputStream os = new FileOutputStream(fileOut);
             // init parser
-            IntelHexParser parser = new IntelHexParser(is);
+            Parser parser = new Parser(is);
 
-            // 1st iteration - calculate maximum output range            
+            // 1st iteration - calculate maximum output range
             RangeDetector rangeDetector = new RangeDetector();
             parser.setDataListener(rangeDetector);
             parser.parse();
             is.getChannel().position(0);
             Region outputRegion = rangeDetector.getFullRangeRegion();
-          
+
             // if address parameter is "max", calculate maximum memory region
             if (!("min".equals(dataFrom))) {
                 outputRegion.setAddressStart(Long.parseLong(dataFrom.substring(2), 16));
-            } 
+            }
             if (!("max".equals(dataTo))) {
                 outputRegion.setAddressEnd(Long.parseLong(dataTo.substring(2), 16));
             }
@@ -137,10 +142,9 @@ public class IntelHexParserDemo {
 
             System.out.print("Written output: ");
             System.out.println(outputRegion);
-            
 
         } catch (IntelHexException | IOException ex) {
-            Logger.getLogger(IntelHexParserDemo.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Hex2bin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

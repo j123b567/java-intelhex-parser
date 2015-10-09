@@ -23,8 +23,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package cz.jaybee.intelhex;
+package cz.jaybee.intelhex.listeners;
 
+import cz.jaybee.intelhex.DataListener;
+import cz.jaybee.intelhex.MemoryRegions;
+import cz.jaybee.intelhex.Region;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
@@ -36,7 +39,7 @@ import java.util.logging.Logger;
  *
  * @author Jan Breuer
  */
-public class BinWriter implements IntelHexDataListener {
+public class BinWriter implements DataListener {
 
     private final Region outputRegion;
     private final OutputStream destination;

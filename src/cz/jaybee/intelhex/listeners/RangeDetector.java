@@ -23,49 +23,41 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package cz.jaybee.intelhex;
+package cz.jaybee.intelhex.listeners;
+
+import cz.jaybee.intelhex.DataListener;
+import cz.jaybee.intelhex.MemoryRegions;
+import cz.jaybee.intelhex.Region;
 
 /**
- * Type of one record in Intel HEX file (type of line)
+ * First pass listener to calculate data address range for further use
  *
+ * @author riilabs
  * @author Jan Breuer
  */
-public enum IntelHexRecordType {
+public class RangeDetector implements DataListener {
 
-    DATA(0x00),
-    EOF(0x01),
-    EXT_SEG(0x02),
-    START_SEG(0x03),
-    EXT_LIN(0x04),
-    START_LIN(0x05),
-    UNKNOWN(0xFF);
-    int id;
+    private final MemoryRegions regions = new MemoryRegions();
 
-    IntelHexRecordType(int id) {
-        this.id = id;
+    @Override
+    public void data(long address, byte[] data) {
+        regions.add(address, data.length);
     }
 
-    /**
-     * Convert enum value to integer
-     *
-     * @return record type integer value
-     */
-    public int toInt() {
-        return id;
+    @Override
+    public void eof() {
+        regions.compact();
     }
 
-    /**
-     * Convert integer value to enum value
-     *
-     * @param id record type integer value
-     * @return record type enum value
-     */
-    public static IntelHexRecordType fromInt(int id) {
-        for (IntelHexRecordType d : IntelHexRecordType.values()) {
-            if (d.id == id) {
-                return d;
-            }
-        }
-        return IntelHexRecordType.UNKNOWN;
+    public void reset() {
+        regions.clear();
+    }
+
+    public Region getFullRangeRegion() {
+        return regions.getFullRangeRegion();
+    }
+    
+    public MemoryRegions getMemoryRegions() {
+        return regions;
     }
 }

@@ -26,25 +26,46 @@
 package cz.jaybee.intelhex;
 
 /**
- * Listener interface to parser events
+ * Type of one record in Intel HEX file (type of line)
  *
  * @author Jan Breuer
  */
-public interface IntelHexDataListener {
+public enum RecordType {
+
+    DATA(0x00),
+    EOF(0x01),
+    EXT_SEG(0x02),
+    START_SEG(0x03),
+    EXT_LIN(0x04),
+    START_LIN(0x05),
+    UNKNOWN(0xFF);
+    int id;
+
+    RecordType(int id) {
+        this.id = id;
+    }
 
     /**
-     * Every time new data are read from file, this listener method is called
-     * with appropriate values. Multiple calls of this function may be done
-     * inside one memory regions but they will not overlap (if they don't
-     * overlap in original intelhex).
+     * Convert enum value to integer
      *
-     * @param address
-     * @param data
+     * @return record type integer value
      */
-    public void data(long address, byte[] data);
+    public int toInt() {
+        return id;
+    }
 
     /**
-     * After eof is detected in the file, this listener method is called
+     * Convert integer value to enum value
+     *
+     * @param id record type integer value
+     * @return record type enum value
      */
-    public void eof();
+    public static RecordType fromInt(int id) {
+        for (RecordType d : RecordType.values()) {
+            if (d.id == id) {
+                return d;
+            }
+        }
+        return RecordType.UNKNOWN;
+    }
 }

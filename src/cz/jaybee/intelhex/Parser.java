@@ -34,10 +34,10 @@ import java.io.*;
  * @author Kristian Sloth Lauszus
  * @author riilabs
  */
-public class IntelHexParser {
+public class Parser {
 
     private final BufferedReader reader;
-    private IntelHexDataListener dataListener = null;
+    private DataListener dataListener = null;
     private static final int HEX = 16;
     private boolean eof = false;
     private int recordIdx = 0;
@@ -51,7 +51,7 @@ public class IntelHexParser {
 
         int length;
         int address;
-        IntelHexRecordType type;
+        RecordType type;
         byte[] data;
 
         /**
@@ -82,7 +82,7 @@ public class IntelHexParser {
      *
      * @param reader
      */
-    public IntelHexParser(Reader reader) {
+    public Parser(Reader reader) {
         this.reader = (reader instanceof BufferedReader) ? (BufferedReader) reader : new BufferedReader(reader);
     }
 
@@ -91,7 +91,7 @@ public class IntelHexParser {
      *
      * @param stream
      */
-    public IntelHexParser(InputStream stream) {
+    public Parser(InputStream stream) {
         this.reader = new BufferedReader(new InputStreamReader(stream));
     }
 
@@ -100,7 +100,7 @@ public class IntelHexParser {
      *
      * @param listener
      */
-    public void setDataListener(IntelHexDataListener listener) {
+    public void setDataListener(DataListener listener) {
         this.dataListener = listener;
     }
 
@@ -152,8 +152,8 @@ public class IntelHexParser {
         result.address = ((hexRecord[1] & 0xFF) << 8) + (hexRecord[2] & 0xFF);
 
         // determine record type
-        result.type = IntelHexRecordType.fromInt(hexRecord[3] & 0xFF);
-        if (result.type == IntelHexRecordType.UNKNOWN) {
+        result.type = RecordType.fromInt(hexRecord[3] & 0xFF);
+        if (result.type == RecordType.UNKNOWN) {
             throw new IntelHexException("Unsupported record type " + (hexRecord[3] & 0xFF) + " (" + recordIdx + ")");
         }
 
@@ -219,6 +219,7 @@ public class IntelHexParser {
                 } else {
                     throw new IntelHexException("Invalid START_SEG record at line #" + recordIdx + " " + record);
                 }
+                break;
             case UNKNOWN:
                 break;
         }
