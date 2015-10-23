@@ -138,7 +138,7 @@ public class Hex2bin {
             // print statistics
             System.out.printf("Program start address 0x%08X\r\n", parser.getStartAddress());
             System.out.println("Memory regions: ");
-            System.out.println(writer.getMemoryRegions());
+            System.out.println(rangeDetector.getMemoryRegions());
 
             System.out.print("Written output: ");
             System.out.println(outputRegion);
