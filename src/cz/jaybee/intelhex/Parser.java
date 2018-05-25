@@ -217,6 +217,10 @@ public class Parser {
         String recordStr;
 
         while ((recordStr = reader.readLine()) != null) {
+            // Ignore if this is a blank line.
+            if (recordStr.isEmpty()) {
+                continue;
+            }
             Record record = parseRecord(recordStr);
             processRecord(record);
             recordIdx++;
