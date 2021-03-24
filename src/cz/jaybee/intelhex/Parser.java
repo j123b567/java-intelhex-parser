@@ -107,7 +107,7 @@ public class Parser {
         }
 
         // if the length field does not correspond with line length
-        result.length = hexRecord[0];
+        result.length = hexRecord[0] & 0xFF;
         if ((result.length + 5) != hexRecord.length) {
             throw new IntelHexException("Invalid record length (" + recordIdx + ")");
         }
