@@ -107,7 +107,11 @@ public class Parser {
         }
 
         // if the length field does not correspond with line length
-        result.length = hexRecord[0];
+        if (hexRecord[0] < 0) // FIX #7( https://github.com/j123b567/java-intelhex-parser/issues/7) ':FF02000048474645444353525150...' -> hexRecord[0] = -1
+            result.length = (int) hexRecord[0] + 256;
+        else
+            result.length = (int) hexRecord[0];
+
         if ((result.length + 5) != hexRecord.length) {
             throw new IntelHexException("Invalid record length (" + recordIdx + ")");
         }
