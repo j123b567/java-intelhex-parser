@@ -6,7 +6,7 @@
   <artifactId>intelhex</artifactId>
   <version>1.0</version>
   <name>java-intelhex-parser</name>
-  <url>https://github.com/ZZerog/java-intelhex-parser</url>
+  <url>https://github.com/j123b567/java-intelhex-parser</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -27,6 +27,7 @@
           <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-dependency-plugin</artifactId>
+              <version>3.1.2</version>
               <executions>
                   <execution>
                       <id>copy-dependencies</id>
@@ -46,6 +47,7 @@
           <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-jar-plugin</artifactId>
+              <version>3.3.0</version>
               <configuration>
                   <archive>
                       <manifest>

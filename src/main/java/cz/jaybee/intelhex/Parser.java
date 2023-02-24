@@ -74,13 +74,12 @@ public class Parser {
     /**
      * Parse one line of Intel HEX file
      *
-     * @param string record
      * @return parsed record
      * @throws IntelHexException
      */
     private Record parseRecord(String record) throws IntelHexException {
         Record result = new Record();
-        // check, if there wasn an accidential EOF record
+        // check, if there wasn't an accidential EOF record
         if (eof) {
             throw new IntelHexException("Data after eof (" + recordIdx + ")");
         }

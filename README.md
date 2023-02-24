@@ -1,5 +1,4 @@
-Java IntelHex Parser Library
-====================
+# Java IntelHex Parser Library
 
 * IntelHex file format parsing library written in Java.
 * Licensed under Simplified BSD license
@@ -30,11 +29,15 @@ Simples usage:
 	
 ~~~~~
 
-### Build:
+## Build
 
-`mvn clean install`
+`mvn package`
 
 ### Run demo:
 after build go to the target directory and run:
 
 `java -jar intelhex-1.0.jar`
+
+## Install the package to the local repository
+
+`mvn clean install`
