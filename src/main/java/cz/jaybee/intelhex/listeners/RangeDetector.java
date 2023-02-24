@@ -25,7 +25,7 @@
  */
 package cz.jaybee.intelhex.listeners;
 
-import cz.jaybee.intelhex.DataListener;
+import cz.jaybee.intelhex.IntelHexDataListener;
 import cz.jaybee.intelhex.MemoryRegions;
 import cz.jaybee.intelhex.Region;
 
@@ -35,7 +35,7 @@ import cz.jaybee.intelhex.Region;
  * @author riilabs
  * @author Jan Breuer
  */
-public class RangeDetector implements DataListener {
+public class RangeDetector implements IntelHexDataListener {
 
     private final MemoryRegions regions = new MemoryRegions();
 

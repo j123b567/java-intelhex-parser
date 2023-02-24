@@ -23,17 +23,16 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package cz.jaybee.cli;
+package cz.jaybee.intelhex.cli;
 
+import cz.jaybee.intelhex.IntelHexDataListener;
 import cz.jaybee.intelhex.IntelHexException;
-import cz.jaybee.intelhex.Parser;
+import cz.jaybee.intelhex.IntelHexParser;
 import cz.jaybee.intelhex.Region;
 import cz.jaybee.intelhex.listeners.RangeDetector;
 import cz.jaybee.intelhex.listeners.BinWriter;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,23 +43,17 @@ import java.util.logging.Logger;
  */
 public class Hex2bin {
 
+
     /**
      * Convert Intel HEX to bin
      *
      * usage:
-     *
      * Hex2bin {source} {target}
-     *
      * Hex2bin {source} {target} {address_from} {address_to}
-     *
      * {source} is source Intel HEX file name
-     *
      * {target} is target BIN file name
-     *
      * {address_from} is start address e.g. 0x1D000000 or min
-     *
      * {address_to} is end address e.g. 0x1D07FFFF or max
-     *
      * if no address_from and address_to is specified, maximum range is used
      *
      * @param args the command line arguments
@@ -113,7 +106,7 @@ public class Hex2bin {
         try (FileInputStream is = new FileInputStream(fileIn)) {
             OutputStream os = new FileOutputStream(fileOut);
             // init parser
-            Parser parser = new Parser(is);
+            IntelHexParser parser = new IntelHexParser(is);
 
             // 1st iteration - calculate maximum output range
             RangeDetector rangeDetector = new RangeDetector();

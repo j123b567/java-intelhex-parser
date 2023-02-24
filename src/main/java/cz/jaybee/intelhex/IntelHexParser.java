@@ -34,10 +34,10 @@ import java.io.*;
  * @author Kristian Sloth Lauszus
  * @author riilabs
  */
-public class Parser {
+public class IntelHexParser {
 
     private final BufferedReader reader;
-    private DataListener dataListener = null;
+    private IntelHexDataListener dataListener = null;
     private static final int HEX = 16;
     private boolean eof = false;
     private int recordIdx = 0;
@@ -49,7 +49,7 @@ public class Parser {
      *
      * @param reader
      */
-    public Parser(Reader reader) {
+    public IntelHexParser(Reader reader) {
         this.reader = (reader instanceof BufferedReader) ? (BufferedReader) reader : new BufferedReader(reader);
     }
 
@@ -58,7 +58,7 @@ public class Parser {
      *
      * @param stream
      */
-    public Parser(InputStream stream) {
+    public IntelHexParser(InputStream stream) {
         this.reader = new BufferedReader(new InputStreamReader(stream));
     }
 
@@ -67,7 +67,7 @@ public class Parser {
      *
      * @param listener
      */
-    public void setDataListener(DataListener listener) {
+    public void setDataListener(IntelHexDataListener listener) {
         this.dataListener = listener;
     }
 
