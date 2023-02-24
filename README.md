@@ -11,10 +11,11 @@ Simples usage:
 	InputStream is = new FileInputStream("Application.hex");
 	
 	// create IntelHexParserObject
-	IntelHexParser ihp = new IntelHexParser(is);
+	Parser ihp = new Parser(is);
 	
 	// register parser listener
-	ihp.setDataListener(new IntelHexDataListener() {
+	ihp.setDataListener(new DataListener() {
+	
 		@Override
 		public void data(long address, byte[] data) {
 			// process data

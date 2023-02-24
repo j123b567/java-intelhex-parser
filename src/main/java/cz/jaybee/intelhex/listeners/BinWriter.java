@@ -25,7 +25,7 @@
  */
 package cz.jaybee.intelhex.listeners;
 
-import cz.jaybee.intelhex.IntelHexDataListener;
+import cz.jaybee.intelhex.DataListener;
 import cz.jaybee.intelhex.MemoryRegions;
 import cz.jaybee.intelhex.Region;
 import java.io.IOException;
@@ -39,7 +39,7 @@ import java.util.logging.Logger;
  *
  * @author Jan Breuer
  */
-public class BinWriter implements IntelHexDataListener {
+public class BinWriter implements DataListener {
 
     private final Region outputRegion;
     private final OutputStream destination;

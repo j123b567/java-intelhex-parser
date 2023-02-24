@@ -30,7 +30,7 @@ package cz.jaybee.intelhex;
  *
  * @author Jan Breuer
  */
-public interface IntelHexDataListener {
+public interface DataListener {
 
     /**
      * Every time new data are read from file, this listener method is called

@@ -25,9 +25,8 @@
  */
 package cz.jaybee.intelhex.cli;
 
-import cz.jaybee.intelhex.IntelHexDataListener;
 import cz.jaybee.intelhex.IntelHexException;
-import cz.jaybee.intelhex.IntelHexParser;
+import cz.jaybee.intelhex.Parser;
 import cz.jaybee.intelhex.Region;
 import cz.jaybee.intelhex.listeners.RangeDetector;
 import cz.jaybee.intelhex.listeners.BinWriter;
@@ -106,7 +105,7 @@ public class Hex2bin {
         try (FileInputStream is = new FileInputStream(fileIn)) {
             OutputStream os = new FileOutputStream(fileOut);
             // init parser
-            IntelHexParser parser = new IntelHexParser(is);
+            Parser parser = new Parser(is);
 
             // 1st iteration - calculate maximum output range
             RangeDetector rangeDetector = new RangeDetector();
