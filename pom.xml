@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>cz.jaybee</groupId>
+  <artifactId>intelhex</artifactId>
+  <version>1.0</version>
+  <name>java-intelhex-parser</name>
+  <url>https://github.com/j123b567/java-intelhex-parser</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+
+  <dependencies>
+      <!-- no dependency yet -->
+  </dependencies>
+
+  <build>
+      <plugins>
+
+          <!--
+          Build JAR with dependencies
+          -->
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-dependency-plugin</artifactId>
+              <version>3.1.2</version>
+              <executions>
+                  <execution>
+                      <id>copy-dependencies</id>
+                      <phase>prepare-package</phase>
+                      <goals>
+                          <goal>copy-dependencies</goal>
+                      </goals>
+                      <configuration>
+                          <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                          <overWriteReleases>false</overWriteReleases>
+                          <overWriteSnapshots>false</overWriteSnapshots>
+                          <overWriteIfNewer>true</overWriteIfNewer>
+                      </configuration>
+                  </execution>
+              </executions>
+          </plugin>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-jar-plugin</artifactId>
+              <version>3.3.0</version>
+              <configuration>
+                  <archive>
+                      <manifest>
+                          <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                          <addClasspath>true</addClasspath>
+                          <classpathPrefix>lib/</classpathPrefix>
+                          <mainClass>cz.jaybee.intelhex.cli.Hex2bin</mainClass>
+                      </manifest>
+                      <manifestEntries>
+                      </manifestEntries>
+                  </archive>
+              </configuration>
+          </plugin>
+          <!--
+          End - build JAR with dependencies
+          -->
+      </plugins>
+  </build>
+
+    <profiles>
+        <!-- no profile yet -->
+    </profiles>
+</project>
