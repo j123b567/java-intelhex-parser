@@ -35,6 +35,7 @@ public class Record {
     public int address;
     public RecordType type;
     public byte[] data;
+    public byte checksum;
 
     /**
      * Convert the record to pretty string

@@ -39,55 +39,20 @@ import java.util.logging.Logger;
  *
  * @author Jan Breuer
  */
-public class BinWriter implements DataListener {
+public class BinWriter extends Writer {
 
-    private final Region outputRegion;
-    private final OutputStream destination;
-    private final byte[] buffer;
-    private final MemoryRegions regions;
-    private long maxAddress;
-    private final boolean minimize;
+    final boolean minimize;
 
     public BinWriter(Region outputRegion, OutputStream destination, boolean minimize) {
-        this.outputRegion = outputRegion;
-        this.destination = destination;
+        super(outputRegion, destination);
         this.minimize = minimize;
-        this.buffer = new byte[(int) (outputRegion.getLength())];
-        Arrays.fill(buffer, (byte) 0xFF);
-        regions = new MemoryRegions();
-        maxAddress = outputRegion.getAddressStart();
     }
 
     @Override
-    public void data(long address, byte[] data) {
-        regions.add(address, data.length);
-
-        if ((address >= outputRegion.getAddressStart()) && (address <= outputRegion.getAddressEnd())) {
-            int length = data.length;
-            if ((address + length) > outputRegion.getAddressEnd()) {
-                length = (int) (outputRegion.getAddressEnd() - address + 1);
-            }
-            System.arraycopy(data, 0, buffer, (int) (address - outputRegion.getAddressStart()), length);
-            
-            if (maxAddress < (address + data.length -1)) {
-                maxAddress = address + data.length - 1;
-            }
+    void write() throws IOException {
+        if (!minimize) {
+            maxAddress = outputRegion.getAddressEnd();
         }
+        destination.write(buffer, 0, (int)(maxAddress - outputRegion.getAddressStart() + 1));
     }
-
-    @Override
-    public void eof() {       
-        try {
-            if (!minimize) {
-                maxAddress = outputRegion.getAddressEnd();
-            }
-            destination.write(buffer, 0, (int)(maxAddress - outputRegion.getAddressStart() + 1));
-        } catch (IOException ex) {
-            Logger.getLogger(BinWriter.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public MemoryRegions getMemoryRegions() {
-        return regions;
-    }    
 }

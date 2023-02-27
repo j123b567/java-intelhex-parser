@@ -42,8 +42,9 @@ public class MemoryRegions {
 
     public void add(long start, long length) {
         Region prevRegion;
+
         if (regions.size() > 0) {
-            prevRegion = regions.get(regions.size() - 1);
+            prevRegion = regions.get(regions.size() - 1); //get last region
             long nextAddress = prevRegion.getAddressStart() + prevRegion.getLength();
             if (nextAddress == start) {
                 prevRegion.incLength(length);
