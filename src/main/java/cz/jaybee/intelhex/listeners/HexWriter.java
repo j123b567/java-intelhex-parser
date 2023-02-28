@@ -1,10 +1,13 @@
 package cz.jaybee.intelhex.listeners;
 
+import cz.jaybee.intelhex.IntelHexException;
 import cz.jaybee.intelhex.Record;
 import cz.jaybee.intelhex.RecordType;
 import cz.jaybee.intelhex.Region;
 
 import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class HexWriter extends Writer {
 
@@ -12,23 +15,36 @@ public class HexWriter extends Writer {
         super(outputRegion, destination);
     }
 
-    public void appendPrefix(byte[] data) {
+    public void appendPrefix(byte[] data) throws IntelHexException {
         byte[] newBuffer = new byte[buffer.length + data.length];
 
         //copy whole buffer to bigger
-        System.arraycopy(buffer, 0, newBuffer, data.length, newBuffer.length);
+        System.arraycopy(buffer, 0, newBuffer, data.length, buffer.length);
         buffer = newBuffer;
 
         replaceData(0, data);
     }
 
-    public void replaceData(int address, byte[] data) {
-        //TODO test address
+    public void replaceData(int address, byte[] data) throws IntelHexException {
+
+        if(address < 0 ) {
+            throw new IntelHexException("Replace error. Invalid address. Address=(" + address + ") < 0");
+        }
+
+        if(address + data.length > buffer.length) {
+            throw new IntelHexException("Replace error. Invalid address. Address+data.length=(" + address+data.length + ") > buffer length=(" + buffer.length+")");
+        }
+
         System.arraycopy(data, 0, buffer, address, data.length);
     }
 
     @Override
-    void write() throws IOException {
+    public void eof() {
+        //do nothing when eof is detected
+    }
+
+    @Override
+    public void write() throws IOException {
 
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(destination))) {
 
@@ -145,26 +161,14 @@ public class HexWriter extends Writer {
     public String getLine(Record record) {
 
         StringBuilder sb = new StringBuilder(":");
-        //sb.append("L>");
-
         get(sb, intTo1BytesArr(record.length));
-        //sb.append(" A>");
-
         get(sb, intTo2BytesArr(record.address));
-        //sb.append(" T>");
-
         get(sb, intTo1BytesArr(record.type.toInt()));
-        //sb.append(" D>");
         get(sb, record.data, record.length);
-
-        //sb.append(" C>");
         get(sb, intTo1BytesArr(record.checksum));
 
         sb.append("\r\n"); //old windows line separator
-
-        System.out.print(sb.toString().toUpperCase());
-
-        return sb.toString().toUpperCase();
+         return sb.toString().toUpperCase();
     }
 
     private void get(StringBuilder sb, byte[] arr) {
@@ -177,6 +181,14 @@ public class HexWriter extends Writer {
             String hex = Integer.toHexString(b & 0xFF).trim();
             sb.append(new String(new char[2 - hex.length()]).replace('\0', '0'))
                     .append(hex);
+        }
+    }
+
+    public void save() {
+        try {
+            write();
+        } catch (IOException ex) {
+            Logger.getLogger(BinWriter.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

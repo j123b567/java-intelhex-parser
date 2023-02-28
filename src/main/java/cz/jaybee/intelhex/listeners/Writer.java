@@ -11,12 +11,15 @@ import java.util.logging.Logger;
 
 public abstract class Writer implements DataListener {
 
-    final Region outputRegion;
-    final OutputStream destination;
-    byte[] buffer;
+    protected final Region outputRegion;
+    protected final OutputStream destination;
+    protected byte[] buffer;
     //private final MemoryRegions regions;
-    long maxAddress;
+    protected long maxAddress;
 
+    public Writer(Region outputRegion) {
+        this(outputRegion, null);
+    }
     public Writer(Region outputRegion, OutputStream destination) {
         this.outputRegion = outputRegion;
         this.destination = destination;
@@ -44,15 +47,6 @@ public abstract class Writer implements DataListener {
         }
     }
 
-    @Override
-    public void eof() {
-        try {
-            write();
-        } catch (IOException ex) {
-            Logger.getLogger(BinWriter.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    abstract void write() throws IOException;
+    public abstract void write() throws IOException;
 
 }
